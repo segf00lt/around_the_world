@@ -1,0 +1,6 @@
+state,symbol,new_state,new_symbol,direction
+0,0,0,0,D
+0,1,0,1,D
+0,_,1,_,E
+1,1,1,0,E
+1,0,2,1,E

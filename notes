@@ -1,0 +1,23 @@
+
+s = (hora_partida - offset_origem + offset_destino) % 24
+hora_chegada = (s + duracao_voo) mod 24
+dias_depois = floor(hora_chegada / 24)
+
+
+Precisamos de máquinas padrões e de 2 ou mais fitas para realizar cada uma dessas operações:
+
+- soma
+- subtração
+
+as entradas dessas máquinas podem ser positivos ou negativos
+tudo unário. Vamos representar o número -6, por exemplo
+como: <111111- onde < marca o começo da fita.
+
+Ou seja, unário com um sinal de menos no final se for negativo.
+
+E por fim essas duas:
+
+- resto da divisão por 24
+- piso da divisão por 24
+
+
