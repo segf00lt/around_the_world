@@ -2,52 +2,62 @@
 
 
 def somar(a, b):
+    # copy result
     r = a + b
     return r
 
 
 def subtrair(a, b):
+    # copy result
     r = a - b
     return r
 
 
-def inverter_sentido(offset):
-    # Returns the offset with its direction reversed.
-    return -offset
+def inverter_sentido(a):
+    # in place
+    # a = offset
+    return -a
 
 
-def calcular_hora_chegada_e_dias_depois(hora_total):
-    hora_chegada = hora_total % 24
-    dias_depois = hora_total // 24
+def calcular_hora_chegada_e_dias_depois(a):
+    # copy result
+    # a = hora_total, r = hora_chegada, s = dias_depois
+    r = a % 24
+    s = a // 24
 
-    return hora_chegada, dias_depois
+    return r, s
 
 
-def tempo_viagem(hora_partida, offset_origem, offset_destino, duracao_voo):
+def tempo_viagem(a, b, c, d):
+    # copy result
+    # a = hora_partida
+    # b = offset_origem
+    # c = offset_destino
+    # d = duracao_voo
+    # e = horario_de_partida_em_greenwich
+    # f = horario_de_partida_da_origem_no_fuso_do_destino
+    # g = hora_total
+    # r = hora_chegada
+    # s = dias_depois
+
     # Convert departure time to Greenwich time.
-    horario_de_partida_em_greenwich = (
-        somar(hora_partida, inverter_sentido(offset_origem))
-    )
+    e = somar(a, inverter_sentido(b))
 
     # Convert Greenwich time to the destination's time zone.
-    horario_de_partida_da_origem_no_fuso_do_destino = somar(
-        horario_de_partida_em_greenwich,
-        offset_destino
-    )
+    f = somar(e, c)
 
-    hora_total = somar(
-        horario_de_partida_da_origem_no_fuso_do_destino,
-        duracao_voo
-    )
+    g = somar(f, d)
 
-    hora_chegada, dias_depois = (
-        calcular_hora_chegada_e_dias_depois(hora_total)
-    )
+    r, s = calcular_hora_chegada_e_dias_depois(g)
 
-    return hora_chegada, dias_depois
+    return r, s
 
-def longitude_para_horas(offset):
-    return offset // 15
+
+def longitude_para_horas(a):
+    # in place
+    # a = offset
+    return a // 15
+
 
 def tempo_viagem_com_possivel_conexao(
     hora_partida,     # horas
