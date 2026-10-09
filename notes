@@ -21,3 +21,109 @@ E por fim essas duas:
 - piso da divisão por 24
 
 
+// pra calcular hora_chegada e dias_depois você passa por hora_total marcando, a cada 24 1s, com um X, até chegar no final de hora_total. Ao chegar no final, pra pegar hora_chegada você caminha do fim de hora_total para a esquerda até achar o primeiro X copiando os 1s para o espaço na fita de hora_chegada. Depois, pra pegar dias_depois você passa por hora_total e pra cada X que você encontrar (pode substituir ele por 1) você coloca um 1 em dias_depois.
+
+// depois de usar hora_total, lembrar de trocar todos os 0s em 1s (pq os 1s terão sido sobrescritos com 0s)
+
+
+func somar(a, b) {
+  r = a + b
+  
+  return r
+}
+
+func subtrair(a, b) {
+  r = a - b
+
+  return r;
+}
+
+func inverter_sentido(offset) {
+  // isso modifica offset in place, nao copia
+  if sentido(offset) == oeste {
+    set_sentido(offset, leste)
+  } else {
+    set_sentido(offset, oeste)
+  }
+}
+
+func calcular_hora_chegada_e_dias_depois(hora_total) {
+  hora_chegada = hora_total % 24
+  
+  dias_depois = floor(hora_total / 24)
+
+  return hora_chegada, dias_depois
+}
+
+func tempo_viagem(hora_partida, offset_origem, offset_destino, duracao_voo) {
+
+  horario_de_partida_em_greenwich =
+    if sentido(offset_origem, leste) then somar(hora_partida, inverter_sentido(offset_origem))
+    else subtrair(hora_partida, inverter_sentido(offset_origem))
+
+  // goto R1
+  
+  // R1:
+  
+  horario_de_partida_da_origem_no_fuso_do_destino = 
+    if sentido(offset_origem, leste) then somar(horario_de_partida_em_greenwich, inverter_sentido(offset_destino))
+    else subtrair(hora_partida, inverter_sentido(offset_destino))
+
+  // goto R2
+  
+  // R2:
+  
+  hora_total = somar(horario_de_partida_da_origem_no_fuso_do_destino, duracao_voo)
+
+  // goto R3
+  
+  // R3:
+  
+  hora_chegada, dias_depois = calcular_hora_chegada_e_dias_depois(hora_total)
+
+  return hora_chegada, dias_depois
+}
+
+func tempo_viagem_com_possivel_conexao(
+    hora_partida,
+    offset_origem,
+    offset_destino,
+    offset_hub,
+    horas_espera_hub,
+    duracao_voo_1,
+    duracao_voo_2,
+    flag_tem_conexao) {
+
+  var hora_chegada_hub, dias_depois_hub
+  var hora_chegada, dias_depois
+
+  if flag_tem_conexao {
+
+    hora_chegada_hub, dias_depois_hub = tempo_viagem(hora_partida, offset_origem, offset_hub, duracao_voo_1)
+
+    // goto R4
+
+    // R4:
+
+    hora_partida_hub = somar(hora_chegada_hub, horas_espera_hub)
+
+    // goto R5
+
+    // R5:
+
+    hora_chegada, dias_depois = tempo_viagem(hora_partida_hub, offset_hub, offset_destino, duracao_voo_2)
+
+    // goto R7
+
+  } else {
+    hora_chegada, dias_depois = tempo_viagem(hora_partida, offset_origem, offset_destino, duracao_voo_1)
+
+    // goto R7
+  }
+
+    // R7:
+
+  return hora_chegada_hub, dias_depois_hub, hora_chegada, dias_depois
+}
+
+
