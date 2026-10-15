@@ -7,6 +7,16 @@
 
 15/10/26
 
+Todos os numeros seguem a seguinte expressão regular:
+
+((1+0*)|0)[\+\-]\$
+
+O +, - e $ estão precedidos por $ para não gerar conflito com os operadores regex existentes.
+Se um offset for oeste ele tem sinal -, se for leste tem sinal +.
+0 é representado por 0+$
+
+
+Nas ilustrações abaixo o | é meramente representativo.
 
 No caso direto a fita começa assim
 <’D’|hora_partida|duracao_1|offset_origem|offset_destino
@@ -15,6 +25,8 @@ No caso com conexão:
 <'C'|hora_partida|duracao_1|offset_origem|offset_hub|offset_destino|tempo_espera|duração_2
 
 
+
+Segue a descrição lógica da máquina MT1:
 
 
 Veja se tem um D ou um C no inicio da fita
