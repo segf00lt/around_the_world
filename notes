@@ -7,6 +7,16 @@
 
 15/10/26
 
+
+No caso direto a fita começa assim
+<’D’|hora_partida|duracao_1|offset_origem|offset_destino
+
+No caso com conexão:
+<'C'|hora_partida|duracao_1|offset_origem|offset_hub|offset_destino|tempo_espera|duração_2
+
+
+
+
 Veja se tem um D ou um C no inicio da fita
 
 Se for D
