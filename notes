@@ -1,129 +1,118 @@
 
-s = (hora_partida - offset_origem + offset_destino) % 24
-hora_chegada = (s + duracao_voo) mod 24
-dias_depois = floor(hora_chegada / 24)
 
 
-Precisamos de máquinas padrões e de 2 ou mais fitas para realizar cada uma dessas operações:
-
-- soma
-- subtração
-
-as entradas dessas máquinas podem ser positivos ou negativos
-tudo unário. Vamos representar o número -6, por exemplo
-como: <111111- onde < marca o começo da fita.
-
-Ou seja, unário com um sinal de menos no final se for negativo.
-
-E por fim essas duas:
-
-- resto da divisão por 24
-- piso da divisão por 24
 
 
-// pra calcular hora_chegada e dias_depois você passa por hora_total marcando, a cada 24 1s, com um X, até chegar no final de hora_total. Ao chegar no final, pra pegar hora_chegada você caminha do fim de hora_total para a esquerda até achar o primeiro X copiando os 1s para o espaço na fita de hora_chegada. Depois, pra pegar dias_depois você passa por hora_total e pra cada X que você encontrar (pode substituir ele por 1) você coloca um 1 em dias_depois.
-
-// depois de usar hora_total, lembrar de trocar todos os 0s em 1s (pq os 1s terão sido sobrescritos com 0s)
 
 
-func somar(a, b) {
-  r = a + b
+15/10/26
+
+Veja se tem um D ou um C no inicio da fita
+
+Se for D
+  Busque o terceiro e quarto $ e troque eles por &
+
+Caso for C
+  Busque o terceiro, quarto e quinto $ e troque eles por &
+
+Volte ao inicio da fita
+
+loop_divisao_15:
+  Procura um & e troca por $
+
+  Se voce chegar no _ nao tem mais nada pra fazer, escreve _, va um pra esquerda e saia do loop
+
+  Volte para o $ anterior e va um simbolo para a direita (agora voce ta no inicio do offset)
+
+  divisao_in_place_por_15()
+
+  Va para loop_divisao_15
+
+Volte ao inicio da fita
+Va um para a direita
+
+Se for D
+  Busque o quarto $, ao encontrar escreve & e va para a esquerda
+  Volta pro inicio da fita
   
-  return r
-}
+Se for C
+  Busque o quarto $, ao encontrar escreve & e va para a esquerda
+  Volte até achar o $ anterior trocando 1 por x
+  Quando voce ver um $ pare e va para a direita
+  Va para a direita até encontrar &
+  loop_copia_x:
+    Volte para a esquerda procurando um x
+    Se voce encontrar $ pule pra fim_loop_copia_x
+    Ao encontrar x troque por 1, va para a extrema direita da fita e troque o primeiro _ por 1
+    va para loop_copia_x
+  fim_loop_copia_x
 
-func subtrair(a, b) {
-  r = a - b
+  procura o + ou - no final de offset_hub
+  coloque o sinal oposto na extrema direita da fita seguido por $
 
-  return r;
-}
+  Volta pro inicio da fita
 
-func inverter_sentido(offset) {
-  // isso modifica offset in place, nao copia
-  if sentido(offset) == oeste {
-    set_sentido(offset, leste)
-  } else {
-    set_sentido(offset, oeste)
-  }
-}
+  (Nesse momento a fita tem esta assim: <'C'|hora_partida|duracao_1|offset_origem|offset_hub|offset_destino|espera|duracao_1|copia_com_sinal_contrario_offset_hub )
+  (Alem disso o offset_hub vai ter um & no final inves do $)
 
-func calcular_hora_chegada_e_dias_depois(hora_total) {
-  hora_chegada = hora_total % 24
+Va um para a direita
+
+loop_soma_subtracao:
+  se o primeiro valor e o da direita forem +
+    soma()
+  se o primeiro valor e o da direita forem -
+    soma()
+  se o primeiro valor for + e o da direita for -
+    subtrai()
+  se o primeiro valor for - e o da direita for +
+    subtrai()
+  (nesses casos do sinal diferente o que prevalece é sempre o da direita, isso é muito conveniente)
+
+  se o simbolo no final do primeiro numero da fita for & sai do loop
+fim_loop_soma_subtracao
+
+Volta pro inicio da fita
+va pra direita
+
+Se for C
+  troca C por R
+  troca todos os 1 do primeiro valor da fita pra x
+  coloca um R no final da fita
+  loop_copiar_primeiro_valor:
+    volta para a esquerda até achar um x
+    se achar < antes sai do loop
+    troca x por 1
+    anda para a direita até achar _ e troca por 1
+  fim_loop_copiar_primeiro_valor
+  busca um + ou - e coloca ele na extrema direita da fita seguido por um &
+  volta para a esquerda até achar o primeiro $ e troca por &
+  va para loop_soma_subtracao
+
+Se for R
+  ache o único $ da fita e troque por &
   
-  dias_depois = floor(hora_total / 24)
+Volta pro inicio da fita
+Troca os dois R da fita por $
+Volta pro inicio da fita
+va pra direita
+va pra direita
 
-  return hora_chegada, dias_depois
-}
 
-func tempo_viagem(hora_partida, offset_origem, offset_destino, duracao_voo) {
+loop_divisao_e_mod_24:
+  Procura um & e troca por $
+  Se voce chegar no _ nao tem mais nada pra fazer, escreve _, va um pra esquerda e saia do loop
+  Volte para o $ anterior e va um simbolo para a direita (agora voce ta no inicio do offset)
 
-  horario_de_partida_em_greenwich =
-    if sentido(offset_origem, leste) then somar(hora_partida, inverter_sentido(offset_origem))
-    else subtrair(hora_partida, inverter_sentido(offset_origem))
+  divisao_e_mod_in_place_24()    (as duas operações acontecem juntas se vc faz uma divisao, tudo in place)
 
-  // goto R1
-  
-  // R1:
-  
-  horario_de_partida_da_origem_no_fuso_do_destino = 
-    if sentido(offset_origem, leste) then somar(horario_de_partida_em_greenwich, inverter_sentido(offset_destino))
-    else subtrair(hora_partida, inverter_sentido(offset_destino))
+  Va para loop_divisao_e_mod_24
+fim_loop_divisao_e_mod_24
 
-  // goto R2
-  
-  // R2:
-  
-  hora_total = somar(horario_de_partida_da_origem_no_fuso_do_destino, duracao_voo)
 
-  // goto R3
-  
-  // R3:
-  
-  hora_chegada, dias_depois = calcular_hora_chegada_e_dias_depois(hora_total)
+limpeza da fita (a definir)
 
-  return hora_chegada, dias_depois
-}
 
-func tempo_viagem_com_possivel_conexao(
-    hora_partida,
-    offset_origem,
-    offset_destino,
-    offset_hub,
-    horas_espera_hub,
-    duracao_voo_1,
-    duracao_voo_2,
-    flag_tem_conexao) {
 
-  var hora_chegada_hub, dias_depois_hub
-  var hora_chegada, dias_depois
 
-  if flag_tem_conexao {
-
-    hora_chegada_hub, dias_depois_hub = tempo_viagem(hora_partida, offset_origem, offset_hub, duracao_voo_1)
-
-    // goto R4
-
-    // R4:
-
-    hora_partida_hub = somar(hora_chegada_hub, horas_espera_hub)
-
-    // goto R5
-
-    // R5:
-
-    hora_chegada, dias_depois = tempo_viagem(hora_partida_hub, offset_hub, offset_destino, duracao_voo_2)
-
-    // goto R7
-
-  } else {
-    hora_chegada, dias_depois = tempo_viagem(hora_partida, offset_origem, offset_destino, duracao_voo_1)
-
-    // goto R7
-  }
-
-    // R7:
-
-  return hora_chegada_hub, dias_depois_hub, hora_chegada, dias_depois
-}
 
 
