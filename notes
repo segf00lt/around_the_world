@@ -1,8 +1,9 @@
 
 
 
+17/10/26
 
-
+Simbolos da fita: 0, 1, $, &, c, d, r, x, +, -
 
 
 15/10/26
@@ -19,67 +20,82 @@ Se um offset for oeste ele tem sinal -, se for leste tem sinal +.
 Nas ilustrações abaixo o | é meramente representativo.
 
 No caso direto a fita começa assim
-<’D’|hora_partida|duracao_1|offset_origem|offset_destino
+<’d’|hora_partida|duracao_1|offset_origem|offset_destino
 
 No caso com conexão:
-<'C'|hora_partida|duracao_1|offset_origem|offset_hub|offset_destino|tempo_espera|duração_2
+<'c'|hora_partida|duracao_1|offset_origem|offset_hub|offset_destino|tempo_espera|duração_2
 
 
 
 Segue a descrição lógica da máquina MT1:
 
 
-Veja se tem um D ou um C no inicio da fita
+setup_offsets: (IMPLEMENTADO)
 
-Se for D
+
+marcar_offsets: (IMPLEMENTADO)
+Veja se tem um 'd' ou um 'c' no inicio da fita
+
+Se for 'd'
   Busque o terceiro e quarto $ e troque eles por &
 
-Caso for C
+Caso for 'c'
   Busque o terceiro, quarto e quinto $ e troque eles por &
 
 Volte ao inicio da fita
+fim_marcar_offsets: (IMPLEMENTADO)
 
-loop_divisao_15:
+loop_divisao_15: (IMPLEMENTADO)
   Procura um & e troca por $
 
   Se voce chegar no _ nao tem mais nada pra fazer, escreve _, va um pra esquerda e saia do loop
 
   Volte para o $ anterior e va um simbolo para a direita (agora voce ta no inicio do offset)
 
+  (Obs: essa maquina de divisao deve se manter sempre entre o $ do número anterior na fita e o $ do número que ela está dividindo!!!!!!!!!)
   divisao_in_place_por_15()
 
   Va para loop_divisao_15
+fim_loop_divisao_15: (IMPLEMENTADO)
 
 Volte ao inicio da fita
 Va um para a direita
 
-Se for D
+
+marcar_ultimo_valor_do_primeiro_trecho: (IMPLEMENTADO)
+
+Se for 'd'
   Busque o quarto $, ao encontrar escreve & e va para a esquerda
   Volta pro inicio da fita
-  
-Se for C
+
+Se for 'c'
   Busque o quarto $, ao encontrar escreve & e va para a esquerda
   Volte até achar o $ anterior trocando 1 por x
   Quando voce ver um $ pare e va para a direita
   Va para a direita até encontrar &
-  loop_copia_x:
+  loop_copia_x: (IMPLEMENTADO)
     Volte para a esquerda procurando um x
     Se voce encontrar $ pule pra fim_loop_copia_x
     Ao encontrar x troque por 1, va para a extrema direita da fita e troque o primeiro _ por 1
     va para loop_copia_x
-  fim_loop_copia_x
+  fim_loop_copia_x: (IMPLEMENTADO)
 
   procura o + ou - no final de offset_hub
   coloque o sinal oposto na extrema direita da fita seguido por $
 
   Volta pro inicio da fita
 
-  (Nesse momento a fita tem esta assim: <'C'|hora_partida|duracao_1|offset_origem|offset_hub|offset_destino|espera|duracao_1|copia_com_sinal_contrario_offset_hub )
+  (Nesse momento a fita tem esta assim: <'c'|hora_partida|duracao_1|offset_origem|offset_hub|offset_destino|espera|duracao_1|copia_com_sinal_contrario_offset_hub )
   (Alem disso o offset_hub vai ter um & no final inves do $)
+
+fim_marcar_ultimo_valor_do_primeiro_trecho: (IMPLEMENTADO)
+
+fim_setup_offsets: (IMPLEMENTADO)
+
 
 Va um para a direita
 
-loop_soma_subtracao:
+loop_soma_subtracao: (IMPLEMENTADO)
   se o primeiro valor e o da direita forem +
     soma()
   se o primeiro valor e o da direita forem -
@@ -90,16 +106,20 @@ loop_soma_subtracao:
     subtrai()
   (nesses casos do sinal diferente o que prevalece é sempre o da direita, isso é muito conveniente)
 
-  se o simbolo no final do primeiro numero da fita for & sai do loop
-fim_loop_soma_subtracao
+  se o simbolo no final do primeiro numero da fita for &, troque por $ e sai do loop
 
 Volta pro inicio da fita
+
 va pra direita
 
-Se for C
-  troca C por R
+fim_loop_soma_subtracao: (IMPLEMENTADO)
+
+preparar_segundo_trecho:
+
+Se for 'c'
+  troca 'c' por 'r'
   troca todos os 1 do primeiro valor da fita pra x
-  coloca um R no final da fita
+  coloca um 'r' no final da fita
   loop_copiar_primeiro_valor:
     volta para a esquerda até achar um x
     se achar < antes sai do loop
@@ -110,14 +130,19 @@ Se for C
   volta para a esquerda até achar o primeiro $ e troca por &
   va para loop_soma_subtracao
 
-Se for R
+Se for 'r'
   ache o único $ da fita e troque por &
+
+Se for 'd'
+  va para loop_divisao_e_mod_24
   
 Volta pro inicio da fita
-Troca os dois R da fita por $
+Troca os dois 'r' da fita por $
 Volta pro inicio da fita
 va pra direita
 va pra direita
+
+fime_preparar_segundo_trecho:
 
 
 loop_divisao_e_mod_24:
@@ -128,7 +153,7 @@ loop_divisao_e_mod_24:
   divisao_e_mod_in_place_24()    (as duas operações acontecem juntas se vc faz uma divisao, tudo in place)
 
   Va para loop_divisao_e_mod_24
-fim_loop_divisao_e_mod_24
+fim_loop_divisao_e_mod_24:
 
 
 limpeza da fita (a definir)
