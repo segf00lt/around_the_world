@@ -66,7 +66,6 @@ marcar_ultimo_valor_do_primeiro_trecho: (IMPLEMENTADO)
 
 Se for 'd'
   Busque o quarto $, ao encontrar escreve & e va para a esquerda
-  Volta pro inicio da fita
 
 Se for 'c'
   Busque o quarto $, ao encontrar escreve & e va para a esquerda
@@ -83,10 +82,10 @@ Se for 'c'
   procura o + ou - no final de offset_hub
   coloque o sinal oposto na extrema direita da fita seguido por $
 
-  Volta pro inicio da fita
-
   (Nesse momento a fita tem esta assim: <'c'|hora_partida|duracao_1|offset_origem|offset_hub|offset_destino|espera|duracao_1|copia_com_sinal_contrario_offset_hub )
   (Alem disso o offset_hub vai ter um & no final inves do $)
+
+Volta pro inicio da fita
 
 fim_marcar_ultimo_valor_do_primeiro_trecho: (IMPLEMENTADO)
 
