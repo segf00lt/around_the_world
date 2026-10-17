@@ -114,35 +114,37 @@ va pra direita
 
 fim_loop_soma_subtracao: (IMPLEMENTADO)
 
-preparar_segundo_trecho:
 
-Se for 'c'
+
+preparar_segundo_trecho: (IMPLEMENTADO)
+
+Se for 'd' (IMPLEMENTADO)
+  va para loop_divisao_e_mod_24
+  
+Se for 'c' (IMPLEMENTADO)
   troca 'c' por 'r'
   troca todos os 1 do primeiro valor da fita pra x
   coloca um 'r' no final da fita
-  loop_copiar_primeiro_valor:
+
+  loop_copiar_primeiro_valor: (IMPLEMENTADO)
     volta para a esquerda até achar um x
     se achar < antes sai do loop
     troca x por 1
     anda para a direita até achar _ e troca por 1
-  fim_loop_copiar_primeiro_valor
+    va para loop_copiar_primeiro_valor
+  fim_loop_copiar_primeiro_valor: (IMPLEMENTADO)
+
   busca um + ou - e coloca ele na extrema direita da fita seguido por um &
   volta para a esquerda até achar o primeiro $ e troca por &
   va para loop_soma_subtracao
 
 Se for 'r'
   ache o único $ da fita e troque por &
+  Volta pro inicio da fita
+  va pra direita
 
-Se for 'd'
-  va para loop_divisao_e_mod_24
-  
-Volta pro inicio da fita
-Troca os dois 'r' da fita por $
-Volta pro inicio da fita
-va pra direita
-va pra direita
+fime_preparar_segundo_trecho: (IMPLEMENTADO)
 
-fime_preparar_segundo_trecho:
 
 
 loop_divisao_e_mod_24:
@@ -154,6 +156,7 @@ loop_divisao_e_mod_24:
 
   Va para loop_divisao_e_mod_24
 fim_loop_divisao_e_mod_24:
+
 
 
 limpeza da fita (a definir)
